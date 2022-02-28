@@ -1,0 +1,14 @@
+[Unit]
+Description=Enviro API
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 -u enviroapi.py
+WorkingDirectory=/home/pi/EnviroAPI
+StandardOutput=inherit
+StandardError=inherit
+Restart=never
+User=pi
+
+[Install]
+WantedBy=multi-user.target

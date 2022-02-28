@@ -1,0 +1,14 @@
+[Unit]
+Description=Envirohat Logger
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 -u envirologger.py
+WorkingDirectory=/home/pi/EnviroAPI
+StandardOutput=inherit
+StandardError=inherit
+Restart=never
+User=pi
+
+[Install]
+WantedBy=multi-user.target
