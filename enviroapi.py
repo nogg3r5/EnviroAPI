@@ -29,7 +29,7 @@ def custom():
 
 @app.route('/latest', methods= ['GET'])
 def latest():
- Connection = sqlite3.connect('/home/pi/database/enviro.db')
+ sqliteConnection = sqlite3.connect('/home/pi/database/enviro.db')
  query = """SELECT * from Enviro ORDER BY ID DESC LIMIT 1;"""
  cursor = sqliteConnection.cursor()
  cursor.execute(query)
