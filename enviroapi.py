@@ -16,12 +16,10 @@ def index():
 
 @app.route('/custom', methods=['GET'])
 def custom():
- days = flask.request.args.get('days', default=1, type = int)
+ days = flask.request.args.get('days', default=1, type = float)
  days = "'-"+str(days)+" day'"
- print(days)
  sqliteConnection = sqlite3.connect('/home/pi/database/enviro.db')
  query = "SELECT * from Enviro where datetime>= datetime('now',"+days+");"
- print(query)
  cursor = sqliteConnection.cursor()
  cursor.execute(query)
  data = cursor.fetchall()
