@@ -18,9 +18,31 @@ gas.set_adc_gain(4.096)
 t1 = time.time()
 wait = 360
 
+# Get the temperature of the CPU for compensation
+def get_cpu_temperature():
+    with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+        temp = f.read()
+        temp = int(temp) / 1000.0
+    return temp
+
+
+# Tuning factor for compensation. Decrease this number to adjust the
+# temperature down, and increase to adjust up
+factor = 2.25
+
+cpu_temps = [get_cpu_temperature()] * 5
+
+#  "temp": bme280.get_temperature(),
+
 while True:
+ cpu_temp = get_cpu_temperature()
+ # Smooth out with some averaging to decrease jitter
+ cpu_temps = cpu_temps[1:] + [cpu_temp]
+ avg_cpu_temp = sum(cpu_temps) / float(len(cpu_temps))
+ raw_temp = bme280.get_temperature()
+ comp_temp = raw_temp - ((avg_cpu_temp - raw_temp) / factor)
  results = {
-  "temp": bme280.get_temperature(),
+  "temp": comp_temp,
   "humid": bme280.get_humidity(),
   "press": bme280.get_pressure(),
   "light": ltr559.get_lux(),
