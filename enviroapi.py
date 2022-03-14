@@ -38,4 +38,15 @@ def latest():
  sqliteConnection.close()
  return flask.jsonify(data)
 
+@app.route('/upload')
+def my_form():
+    return flask.render_template('upload.html')
+
+@app.route('/upload', methods=['POST'])
+def my_form_post():
+    text = flask.request.form['text']
+    with open("links.txt", "a") as fo:
+     fo.write(text +"\n")
+    return text
+
 app.run(host='0.0.0.0')
