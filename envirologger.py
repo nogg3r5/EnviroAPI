@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import time
 import sqlite3
+import schedule
 from enviroplus import gas
 from bme280 import BME280
 try:
@@ -15,9 +16,17 @@ bme280 = BME280()
 
 gas.enable_adc()
 gas.set_adc_gain(4.096)
-t1 = time.time()
-wait = 360
 
+def scheduledJob():
+  print(results)
+  sqliteConnection = sqlite3.connect('/home/pi/database/enviro.db')
+  cursor = sqliteConnection.cursor()
+  cursor.execute("INSERT INTO enviro (temp,pressure,humidity,light,nh3,oxidising,reducing) values(?, ?, ?, ?, ? ,? ,?)", (results['temp'],results['press'],results['humid'],results['light'],results['nh3'],results['oxidising'],results['reducing']))
+  sqliteConnection.commit()
+  cursor.close()
+  sqliteConnection.close()
+
+schedule.every(5).minutes.do(scheduledJob)
 
 while True:
  temp = bme280.get_temperature() - 8
@@ -31,14 +40,5 @@ while True:
   "oxidising": gas.read_oxidising(),
   "reducing": gas.read_reducing()
  }
- t2 = time.time() - t1
- mod = t2%t1
- if mod >= wait:
-  print(results)
-  sqliteConnection = sqlite3.connect('/home/pi/database/enviro.db')
-  cursor = sqliteConnection.cursor()
-  cursor.execute("INSERT INTO enviro (temp,pressure,humidity,light,nh3,oxidising,reducing) values(?, ?, ?, ?, ? ,? ,?)", (results['temp'],results['press'],results['humid'],results['light'],results['nh3'],results['oxidising'],results['reducing']))
-  sqliteConnection.commit()
-  cursor.close()
-  sqliteConnection.close()
-  t1 = time.time()
+ schedule.run_pending()
+ time.sleep(1)
