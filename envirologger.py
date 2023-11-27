@@ -18,7 +18,6 @@ gas.enable_adc()
 gas.set_adc_gain(4.096)
 
 def scheduledJob():
-  print(results)
   sqliteConnection = sqlite3.connect('/home/pi/database/enviro.db')
   cursor = sqliteConnection.cursor()
   cursor.execute("INSERT INTO enviro (temp,pressure,humidity,light,nh3,oxidising,reducing) values(?, ?, ?, ?, ? ,? ,?)", (results['temp'],results['press'],results['humid'],results['light'],results['nh3'],results['oxidising'],results['reducing']))
@@ -29,8 +28,8 @@ def scheduledJob():
 schedule.every(5).minutes.do(scheduledJob)
 
 while True:
- temp = bme280.get_temperature() - 8
- humidity = bme280.get_humidity() + 30
+ temp = bme280.get_temperature() - 12
+ humidity = bme280.get_humidity() + 27
  results = {
   "temp": temp,
   "humid": humidity,

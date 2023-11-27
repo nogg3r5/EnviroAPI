@@ -47,6 +47,14 @@ def my_form_post():
     text = flask.request.form['text']
     with open("links.txt", "a") as fo:
      fo.write(text +"\n")
-    return text
+    return flask.render_template('upload.html')
+
+#http://192.168.4.48:5000/uploadurl/https://google.co.uk
+@app.route('/uploadurl/<path:input_url>')
+def UploadURL(input_url):
+    url = input_url
+    with open("links.txt", "a") as fo:
+     fo.write(url +"\n")
+    return url
 
 app.run(host='0.0.0.0')
