@@ -29,7 +29,7 @@ schedule.every(5).minutes.do(scheduledJob)
 
 while True:
  temp = bme280.get_temperature() - 12
- humidity = bme280.get_humidity() + 27
+ humidity = bme280.get_humidity() + 20
  results = {
   "temp": temp,
   "humid": humidity,
