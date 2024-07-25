@@ -14,6 +14,17 @@ def index():
  sqliteConnection.close()
  return flask.jsonify(data)
 
+@app.route('/pidata', methods= ['GET'])
+def pidata():
+ sqliteConnection = sqlite3.connect('/home/pi/database/pidata.db')
+ query = """SELECT * from pidata where datetime>= datetime('now','-1.2 day');"""
+ cursor = sqliteConnection.cursor()
+ cursor.execute(query)
+ data = cursor.fetchall()
+ cursor.close()
+ sqliteConnection.close()
+ return flask.jsonify(data)
+
 @app.route('/custom', methods=['GET'])
 def custom():
  days = flask.request.args.get('days', default=1, type = float)
